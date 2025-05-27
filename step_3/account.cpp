@@ -70,7 +70,7 @@ void CreditAccount::deposit(const Date &date, double amount, const string &desc)
 }
 
 void CreditAccount::withdraw(const Date &date, double amount, const string &desc) {
-    if (amount > getBalance()-credit)
+    if (amount > getBalance()+credit)
         error("not enough credit");
     else{
         record(date, -amount, desc);
