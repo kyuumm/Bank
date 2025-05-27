@@ -49,11 +49,11 @@ cmake_ninja_workdir = D$:/c++/clion/Bank/cmake-build-debug/
 
 build cmake_object_order_depends_target_Bank: phony || .
 
-build CMakeFiles/Bank.dir/step_1.cpp.obj: CXX_COMPILER__Bank_unscanned_Debug D$:/c++/clion/Bank/step_1.cpp || cmake_object_order_depends_target_Bank
-  DEP_FILE = CMakeFiles\Bank.dir\step_1.cpp.obj.d
+build CMakeFiles/Bank.dir/step_1/step_1.cpp.obj: CXX_COMPILER__Bank_unscanned_Debug D$:/c++/clion/Bank/step_1/step_1.cpp || cmake_object_order_depends_target_Bank
+  DEP_FILE = CMakeFiles\Bank.dir\step_1\step_1.cpp.obj.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\Bank.dir
-  OBJECT_FILE_DIR = CMakeFiles\Bank.dir
+  OBJECT_FILE_DIR = CMakeFiles\Bank.dir\step_1
 
 
 # =============================================================================
@@ -63,7 +63,7 @@ build CMakeFiles/Bank.dir/step_1.cpp.obj: CXX_COMPILER__Bank_unscanned_Debug D$:
 #############################################
 # Link the executable Bank.exe
 
-build Bank.exe: CXX_EXECUTABLE_LINKER__Bank_Debug CMakeFiles/Bank.dir/step_1.cpp.obj
+build Bank.exe: CXX_EXECUTABLE_LINKER__Bank_Debug CMakeFiles/Bank.dir/step_1/step_1.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\Bank.dir
