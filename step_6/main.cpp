@@ -11,6 +11,9 @@
 
 #include <algorithm>
 
+#include<fstream>
+#include<sstream>
+
 using namespace std;
 
 
@@ -22,13 +25,164 @@ struct deleter {
 };
 
 
-
+//两部分：读取历史命令，进入交互式循环并追加记录
 int main() {
+
+    ifstream fin("commands.txt");
 
     Date date(2008, 11, 1);//起始日期
 
     vector<Account *> accounts;//创建账户数组，元素个数为0
 
+
+    if(fin){
+
+
+        string line;
+
+        //getline(fin,line):从cin文件内获取一行一行的数据，并赋值给line
+        while(getline(fin,line)){
+            if (line.empty())continue;
+
+            //iss(istringstream): 想象成一个分词机，按照空格把一整行的文本切成一个个词
+            istringstream iss(line);
+
+            char fileCmd;
+            iss>>fileCmd;
+            //类似与cin>>变量
+            //iss>>variable
+            //variable可以是int double char string 也就是说在一行里面只会读取对应的类型
+
+
+            if(fileCmd=='a'){
+                char type;
+                string id;
+                iss>>type>>id;
+
+                if (type=='s'){
+                    double rate;
+                    iss>>rate;
+                    accounts.push_back(new SavingsAccount(date,id,rate));
+
+                }else{
+                    double credit,rate,fee;
+                    iss>>credit>>rate>>fee;
+                    accounts.push_back(new CreditAccount(date,id ,credit,rate,fee));
+                }
+
+
+            }
+
+            //deposit
+            else if(fileCmd=='d'){
+
+                int index;
+                double amount;
+                iss>>index>>amount;
+
+                string desc;
+
+                getline(iss,desc);
+
+                if(index>=0&&index<(int)accounts.size()){
+                    accounts[index]->deposit(date,amount,desc);
+                }
+
+            }
+
+            //withdraw
+            else if(fileCmd=='w'){
+
+                int index;
+                double amount;
+                iss>>index>>amount;
+                string desc;
+
+                getline(iss,desc);
+
+                if(index>=0&&index<(int)accounts.size()){
+                    accounts[index]->withdraw(date,amount,desc);
+                }
+
+            }
+
+            //change day
+            else if(fileCmd=='c'){
+                int d;
+                iss>>d;
+
+                if(d>=1&&d<=date.getMaxDay()){
+                    date=Date(date.getYear(),date.getMonth(),d);
+                }
+
+
+            }
+
+            //next month
+            else if(fileCmd=='n'){
+                if (date.getMonth()==12){date=Date(date.getYear()+1,1,1);}
+
+                else {date=Date(date.getYear()+1,date.getMonth()+1,1);}
+
+                for (vector<Account*>::iterator iter =accounts.begin();  iter!=accounts.end() ; ++iter) {
+                    (*iter)->settle(date);
+                }
+            }
+
+//            //search
+//            else if(fileCmd=='s'){
+//                    for (size_t i = 0; i < accounts.size(); i++) {
+//
+//                        cout << "[" << i << "] ";
+//
+//                        accounts[i]->show();
+//
+//                        cout << endl;
+//
+//                    }
+//            }
+
+
+            //query
+            else if(fileCmd=='q'){
+                int y1,m1,d1,y2,m2,d2;
+                iss>>y1>>m1>>d1>>y2>>m2>>d2;
+                Date date1(y1,m1,d1),date2(y2,m2,d2);
+
+                Account::query(date1,date2);
+            }
+
+
+
+
+        }
+
+        fin.close();
+    }
+
+    //添加换行，别让commands胡在一起了
+    //commands.txt*****************************
+    {
+        ofstream fout("commands.txt",ios::app);
+        // 只在最后一行不是空行的情况下添加换行
+        string lastLine;
+        ifstream checkLast("commands.txt");
+        string line;
+        while (getline(checkLast, line)) {
+            if (!line.empty()) {
+                lastLine = line;
+            }
+        }
+        checkLast.close();
+        
+        if (!lastLine.empty()) {
+            fout << endl;
+        }
+        fout.close();
+    }
+
+
+    cout<<endl;
     cout << "(a)add account (d)deposit (w)withdraw (s)show (c)change day (n)next month (q)query (e)exit" << endl;
 
     char cmd;
@@ -83,6 +237,21 @@ int main() {
 
                 accounts.push_back(account);
 
+                //commands.txt*************************
+                {
+                    //写入文件的命令：fout
+                    ofstream fout("commands.txt",ios::app);
+                    fout<<"a "<<type<<" "<<id;
+
+                    if (type=='s')  fout<<" "<<rate;
+                    else fout<<" "<<credit<<" "<<rate<<" "<<fee;
+
+                    fout<<endl;
+
+                //大括号的意思：局部作用域，作用域结束，fout的析构函数就自动调用，文件被关闭
+                //也可以不加大括号，直接结尾fout.close()
+                }
+
                 break;
 
             case 'd'://存入现金
@@ -93,7 +262,17 @@ int main() {
 
                 accounts[index]->deposit(date, amount, desc);
 
+
+                //commands.txt*****************************
+                {
+                    ofstream fout("commands.txt",ios::app);
+
+                    fout<<"d "<<index<<" "<<amount<<" "<<desc<<endl;
+                }
+
                 break;
+
+
 
             case 'w'://取出现金
 
@@ -102,6 +281,13 @@ int main() {
                 getline(cin, desc);
 
                 accounts[index]->withdraw(date, amount, desc);
+
+                //commands.txt*****************************
+                {
+                    ofstream fout("commands.txt",ios::app);
+
+                    fout<<"w "<<index<<" "<<amount<<" "<<desc<<endl;
+                }
 
                 break;
 
@@ -135,6 +321,12 @@ int main() {
 
                     date = Date(date.getYear(), date.getMonth(), day);
 
+                //commands.txt**********************
+                {
+                    ofstream fout("commands.txt",ios::app);
+                    fout<<"c "<<day<<endl;
+                }
+
                 break;
 
             case 'n'://进入下个月
@@ -151,6 +343,12 @@ int main() {
 
                     (*iter)->settle(date);
 
+                //commands.txt**********************
+                {
+                    ofstream fout("commands.txt",ios::app);
+                    fout<<"n "<<endl;
+                }
+
                 break;
 
             case 'q'://查询一段时间内的账目
@@ -160,6 +358,17 @@ int main() {
                 date2 = Date::read();
 
                 Account::query(date1, date2);
+
+
+                //commands.txt**********************
+                {
+                    ofstream fout("commands.txt",ios::app);
+                    fout<<"q "<<
+                            date1.getYear()<<" "<<date1.getMonth()<<" "<<date1.getDay()<<" "<<
+                            date2.getYear()<<" "<<date2.getMonth()<<" "<<date2.getDay()<<
+                            endl;
+                }
+
 
                 break;
 

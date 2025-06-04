@@ -31,6 +31,7 @@ void Account::record(const Date &date, double amount, const string &desc) {
 //    lastDate = date;
     amount = floor(amount * 100 + 0.5) / 100;	//保留小数点后两位
     balance += amount;
+    total+=amount;
 
     AccountRecord record(date,this,amount,balance,desc);
 
@@ -50,12 +51,24 @@ void Account::show() const {
 }
 
 void Account::query(const Date&begin,const Date&end){
-    if (begin < end){
-        RecordMap ::iterator  iter1=recordMap.lower_bound(begin);
-        RecordMap ::iterator  iter2=recordMap.upper_bound(end);
-        for ( RecordMap::iterator iter=iter1;iter!=iter2   ; ++iter) {
+    if (begin <= end){
+        RecordMap::iterator iter1 = recordMap.lower_bound(begin);
+        RecordMap::iterator iter2 = recordMap.upper_bound(end);
+        
+        // 添加最大记录显示限制
+        const int MAX_RECORDS = 1000;
+        int recordCount = 0;
+        
+        for (RecordMap::iterator iter = iter1; iter != iter2; ++iter) {
+            if (recordCount >= MAX_RECORDS) {
+                cout << "Warning: Too many records to display. Only showing first " << MAX_RECORDS << " records." << endl;
+                break;
+            }
             iter->second.show();
+            recordCount++;
         }
+    } else {
+        cout << "Error: Invalid date range" << endl;
     }
 }
 
