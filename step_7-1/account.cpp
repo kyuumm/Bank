@@ -12,37 +12,37 @@ double Account::total = 0;
 
 RecordMap Account::recordMap;
 
-Account::Account(const Date& date, const string& id) :id(id), balance(0) {
+Account::Account(const Date &date, const string &id):id(id),balance(0){
     date.show();
     cout << "\t#" << id << " created" << endl;
 }
 
-void AccountRecord::show()const {
+void AccountRecord::show()const{
     date.show();
-    cout << "\t#" << account->getId() << "\t" << amount << "\t" << balance << "\t" << desc << endl;
+    cout<<"\t#"<<account->getId()<<"\t"<<amount<<"\t"<<balance<<"\t"<<desc<<endl;
 }
 
-AccountRecord::AccountRecord(const Date& date, const Account* account, double amount, double balance, const string& desc) :date(date), account(account), amount(amount), balance(balance), desc(desc) {}
+AccountRecord::AccountRecord(const Date&date,const Account *account,double amount,double balance,const string &desc):date(date),account(account),amount(amount),balance(balance),desc(desc){}
 
 
 
-void Account::record(const Date& date, double amount, const string& desc) {
-    //    accumulation = accumulate(date);
-    //    lastDate = date;
-    amount = floor(amount * 100 + 0.5) / 100;	//±£ÁôĞ¡ÊıµãºóÁ½Î»
+void Account::record(const Date &date, double amount, const string &desc) {
+//    accumulation = accumulate(date);
+//    lastDate = date;
+    amount = floor(amount * 100 + 0.5) / 100;	//ä¿ç•™å°æ•°ç‚¹åä¸¤ä½
     balance += amount;
-    total += amount;
+    total+=amount;
 
-    AccountRecord record(date, this, amount, balance, desc);
+    AccountRecord record(date,this,amount,balance,desc);
 
 
-    recordMap.insert(make_pair(date, record));
+    recordMap.insert(make_pair(date,record));
 
     record.show();
 }
 
 
-void Account::error(const string& msg) const {
+void Account::error(const string &msg) const {
     cout << "Error(#" << id << "): " << msg << endl;
 }
 
@@ -50,12 +50,12 @@ void Account::show() const {
     cout << id << "\tBalance: " << balance;
 }
 
-void Account::query(const Date& begin, const Date& end) {
-    if (begin <= end) {
+void Account::query(const Date&begin,const Date&end){
+    if (begin <= end){
         RecordMap::iterator iter1 = recordMap.lower_bound(begin);
         RecordMap::iterator iter2 = recordMap.upper_bound(end);
 
-        // Ìí¼Ó×î´ó¼ÇÂ¼ÏÔÊ¾ÏŞÖÆ
+        // æ·»åŠ æœ€å¤§è®°å½•æ˜¾ç¤ºé™åˆ¶
         const int MAX_RECORDS = 1000;
         int recordCount = 0;
 
@@ -67,78 +67,77 @@ void Account::query(const Date& begin, const Date& end) {
             iter->second.show();
             recordCount++;
         }
-    }
-    else {
+    } else {
         cout << "Error: Invalid date range" << endl;
     }
 }
 
-//SavingsAccountÀàÏà¹Ø³ÉÔ±º¯ÊıµÄÊµÏÖ******************************************
-SavingsAccount::SavingsAccount(const Date& date, const string& id, double rate)
-    : Account(date, id), rate(rate), acc(date, 0) {
+//SavingsAccountç±»ç›¸å…³æˆå‘˜å‡½æ•°çš„å®ç°******************************************
+SavingsAccount::SavingsAccount(const Date &date, const string &id, double rate)
+        : Account(date,id), rate(rate), acc(date,0) {
 
 }
 
-void SavingsAccount::deposit(const Date& date, double amount, const string& desc) {
+void SavingsAccount::deposit(const Date &date, double amount, const string &desc) {
     record(date, amount, desc);
-    acc.change(date, getBalance());
+    acc.change(date,getBalance());
 }
 
-void SavingsAccount::withdraw(const Date& date, double amount, const string& desc) {
+void SavingsAccount::withdraw(const Date &date, double amount, const string &desc) {
     if (amount > getBalance())
-        // error("not enough money");
-        throw AccountExcpetion(this, "Insufficient balance.");
-    else {
+       // error("not enough money");
+        throw AccountExcpetion(this,"Insufficient balance.");
+    else{
         record(date, -amount, desc);
-        acc.change(date, getBalance());
+        acc.change(date,getBalance());
     }
 
 }
 
-void SavingsAccount::settle(const Date& date) {
-    if (date.getMonth() == 1 && date.getDay() == 1) {
-        double interest = acc.getSum(date, getBalance()) * rate	//¼ÆËãÄêÏ¢
-            / (date - Date(date.getYear() - 1, 1, 1));
+void SavingsAccount::settle(const Date &date) {
+    if(date.getMonth()==1&&date.getDay()==1){
+        double interest = acc.getSum(date,getBalance()) * rate	//è®¡ç®—å¹´æ¯
+                          / (date-Date(date.getYear() - 1, 1, 1));
         if (interest != 0)
             record(date, interest, "interest");
-        acc.reset(date, getBalance());
+        acc.reset(date,getBalance());
     }
 
 }
 
 
-//CreditAccountÊµÏÖ**********************************************
+//CreditAccountå®ç°**********************************************
 
-CreditAccount::CreditAccount(const Date& date, const string& id, double credit, double rate, double fee)
-    :Account(date, id), credit(credit), rate(rate), fee(fee), acc(date, 0) {
+CreditAccount::CreditAccount(const Date &date, const string &id, double credit, double rate, double fee)
+        :Account(date,id), credit(credit), rate(rate), fee(fee), acc(date,0) {
 }
 
-void CreditAccount::deposit(const Date& date, double amount, const string& desc) {
+void CreditAccount::deposit(const Date &date, double amount, const string &desc) {
     record(date, amount, desc);
-    acc.change(date, getDebt());
+    acc.change(date,getDebt());
 }
 
-void CreditAccount::withdraw(const Date& date, double amount, const string& desc) {
-    if (amount > getBalance() + credit)
-        // error("not enough credit");
-        throw AccountExcpetion(this, "not enough credit.");
-    else {
+void CreditAccount::withdraw(const Date &date, double amount, const string &desc) {
+    if (amount > getBalance()+credit)
+       // error("not enough credit");
+        throw AccountExcpetion(this,"not enough credit.");
+    else{
         record(date, -amount, desc);
-        acc.change(date, getDebt());
+        acc.change(date,getDebt());
     }
 }
 
-void CreditAccount::settle(const Date& date) {
-    double interest = acc.getSum(date, getDebt()) * rate;//¼ÆËãÄêÏ¢
+void CreditAccount::settle(const Date &date) {
+    double interest = acc.getSum(date,getDebt()) * rate;//è®¡ç®—å¹´æ¯
     if (interest != 0)
         record(date, interest, "interest");
-    if (date.getMonth() == 1) {
-        record(date, -fee, "annual fee");
+    if(date.getMonth()==1){
+        record(date,-fee,"annual fee");
     }
-    acc.reset(date, getDebt());
+    acc.reset(date,getDebt());
 }
 
-void CreditAccount::show()const {
+void CreditAccount::show()const{
     Account::show();
-    cout << "\tAvailable credit:" << getAvailableCredit();
+    cout<<"\tAvailable credit:"<<getAvailableCredit();
 }

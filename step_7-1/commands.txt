@@ -29,3 +29,12 @@ n
 c 15
 
 w 2 1500 buy a television
+
+
+
+
+
+a s S3755217 0.015
+
+
+

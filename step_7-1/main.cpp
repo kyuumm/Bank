@@ -14,6 +14,7 @@
 #include<fstream>
 #include<sstream>
 #include<graphics.h>
+#include<limits>
 
 using namespace std;
 
@@ -30,15 +31,17 @@ void drawDefaultUI() {
     putimage(0, 0, &img_bk);
 
 
-	setbkmode(TRANSPARENT);
-	settextcolor(BLACK);
-    settextstyle(28, 0, _T("Î¢ÈíÑÅºÚ"));
+    setbkmode(TRANSPARENT);
+    settextcolor(BLACK);
+    settextstyle(28, 0, _T("å¾®è½¯é›…é»‘"));
 
     putimage(20, 230, &img_btn);
-    outtextxy(20, 200, _T("°´[A]Ìí¼ÓÕË»§"));
+    outtextxy(20, 200, _T("Press[A]to add an account"));
 
-  
-    outtextxy(100, 560, _T("¡ª¡ªÇëÔÚÖÕ¶ËÖĞÊäÈëÃüÁî¡ª¡ª"));
+
+    outtextxy(10,560, _T("-put the command in the terminal-"));
+
+
 
 }
 
@@ -50,7 +53,7 @@ struct deleter {
 };
 
 
-//Á½²¿·Ö£º¶ÁÈ¡ÀúÊ·ÃüÁî£¬½øÈë½»»¥Ê½Ñ­»·²¢×·¼Ó¼ÇÂ¼
+//ä¸¤éƒ¨åˆ†ï¼šè¯»å–å†å²å‘½ä»¤ï¼Œè¿›å…¥äº¤äº’å¼å¾ªç¯å¹¶è¿½åŠ è®°å½•
 int main() {
 
     initgraph(480, 600);
@@ -60,9 +63,9 @@ int main() {
 
     ifstream fin("commands.txt");
 
-    Date date(2008, 11, 1);//ÆğÊ¼ÈÕÆÚ
+    Date date(2008, 11, 1);//èµ·å§‹æ—¥æœŸ
 
-    vector<Account*> accounts;//´´½¨ÕË»§Êı×é£¬ÔªËØ¸öÊıÎª0
+    vector<Account*> accounts;//åˆ›å»ºè´¦æˆ·æ•°ç»„ï¼Œå…ƒç´ ä¸ªæ•°ä¸º0
 
 
     if (fin) {
@@ -70,18 +73,18 @@ int main() {
 
         string line;
 
-        //getline(fin,line):´ÓcinÎÄ¼şÄÚ»ñÈ¡Ò»ĞĞÒ»ĞĞµÄÊı¾İ£¬²¢¸³Öµ¸øline
+        //getline(fin,line):ä»cinæ–‡ä»¶å†…è·å–ä¸€è¡Œä¸€è¡Œçš„æ•°æ®ï¼Œå¹¶èµ‹å€¼ç»™line
         while (getline(fin, line)) {
             if (line.empty())continue;
 
-            //iss(istringstream): ÏëÏó³ÉÒ»¸ö·Ö´Ê»ú£¬°´ÕÕ¿Õ¸ñ°ÑÒ»ÕûĞĞµÄÎÄ±¾ÇĞ³ÉÒ»¸ö¸ö´Ê
+            //iss(istringstream): æƒ³è±¡æˆä¸€ä¸ªåˆ†è¯æœºï¼ŒæŒ‰ç…§ç©ºæ ¼æŠŠä¸€æ•´è¡Œçš„æ–‡æœ¬åˆ‡æˆä¸€ä¸ªä¸ªè¯
             istringstream iss(line);
 
             char fileCmd;
             iss >> fileCmd;
-            //ÀàËÆÓëcin>>±äÁ¿
+            //ç±»ä¼¼ä¸cin>>å˜é‡
             //iss>>variable
-            //variable¿ÉÒÔÊÇint double char string Ò²¾ÍÊÇËµÔÚÒ»ĞĞÀïÃæÖ»»á¶ÁÈ¡¶ÔÓ¦µÄÀàĞÍ
+            //variableå¯ä»¥æ˜¯int double char string ä¹Ÿå°±æ˜¯è¯´åœ¨ä¸€è¡Œé‡Œé¢åªä¼šè¯»å–å¯¹åº”çš„ç±»å‹
 
 
             if (fileCmd == 'a') {
@@ -191,11 +194,11 @@ int main() {
         fin.close();
     }
 
-    //Ìí¼Ó»»ĞĞ£¬±ğÈÃcommandsºúÔÚÒ»ÆğÁË
+    //æ·»åŠ æ¢è¡Œï¼Œåˆ«è®©commandsèƒ¡åœ¨ä¸€èµ·äº†
     //commands.txt*****************************
     {
         ofstream fout("commands.txt", ios::app);
-        // Ö»ÔÚ×îºóÒ»ĞĞ²»ÊÇ¿ÕĞĞµÄÇé¿öÏÂÌí¼Ó»»ĞĞ
+        // åªåœ¨æœ€åä¸€è¡Œä¸æ˜¯ç©ºè¡Œçš„æƒ…å†µä¸‹æ·»åŠ æ¢è¡Œ
         string lastLine;
         ifstream checkLast("commands.txt");
 
@@ -225,7 +228,7 @@ int main() {
 
         do {
 
-            //ÏÔÊ¾ÈÕÆÚºÍ×Ü½ğ¶î
+            //æ˜¾ç¤ºæ—¥æœŸå’Œæ€»é‡‘é¢
 
             drawDefaultUI();
 
@@ -253,164 +256,218 @@ int main() {
 
             switch (cmd) {
 
-            case 'a'://Ôö¼ÓÕË»§
+                case 'a'://å¢åŠ è´¦æˆ·
 
-                cin >> type >> id;
+                
+                
 
-                if (type == 's') {
 
-                    cin >> rate;
+                    if (!(cin >> type >> id)) {
+                        cin.clear();
+                        cin.ignore(4096, '\n');
 
-                    account = new SavingsAccount(date, id, rate);
+                        cout << "format error" << endl;
+                        break;
+                    }
+                    if (type == 's') {
+
+                    
+                        if (!(cin >> rate)) {
+                            cin.clear();
+                            cin.ignore(4096, '\n');
+
+                            cout << "format error" << endl;
+                            break;
+                        }
+					    if (rate < 0 || rate > 1) {
+						    cout << "rate must be in [0,1]" << endl;
+						    break;
+					    }
+                        account = new SavingsAccount(date, id, rate);
+
+                    }
+
+                    else if(type=='c') {
+
+                    
+
+                        if (!(cin >> credit >> rate >> fee)) {
+                            cin.clear();
+                            cin.ignore(4096, '\n');
+
+                            cout << "format error" << endl;
+                            break;
+                        }
+
+                        account = new CreditAccount(date, id, credit, rate, fee);
+
+                    }
+                    else {
+                        cin.ignore(4096, '\n');
+					    cout << "format error" << endl;
+                        break;
+                    }
+                
+
+                    accounts.push_back(account);
+
+                    //commands.txt*************************
+                    {
+                        //å†™å…¥æ–‡ä»¶çš„å‘½ä»¤ï¼šfout
+                        ofstream fout("commands.txt", ios::app);
+                        fout << "a " << type << " " << id;
+
+                        if (type == 's')  fout << " " << rate;
+                        else fout << " " << credit << " " << rate << " " << fee;
+
+                        fout << endl;
+
+                        //å¤§æ‹¬å·çš„æ„æ€ï¼šå±€éƒ¨ä½œç”¨åŸŸï¼Œä½œç”¨åŸŸç»“æŸï¼Œfoutçš„ææ„å‡½æ•°å°±è‡ªåŠ¨è°ƒç”¨ï¼Œæ–‡ä»¶è¢«å…³é—­
+                        //ä¹Ÿå¯ä»¥ä¸åŠ å¤§æ‹¬å·ï¼Œç›´æ¥ç»“å°¾fout.close()
+                    }
+
+                    break;
+
+                case 'd'://å­˜å…¥ç°é‡‘
+
+                
+                
+
+                    if (!(cin >> index >> amount)) {
+                        cin.clear();
+                        cin.ignore(4096, '\n');
+
+                        cout << "format error" << endl;
+                        break;
+                    }
+                
+
+                    getline(cin, desc);
+
+                    accounts[index]->deposit(date, amount, desc);
+
+
+                    //commands.txt*****************************
+                    {
+                        ofstream fout("commands.txt", ios::app);
+
+                        fout << "d " << index << " " << amount << " " << desc << endl;
+                    }
+
+                    break;
+
+
+
+                case 'w'://å–å‡ºç°é‡‘
+
+                    cin >> index >> amount;
+
+                    getline(cin, desc);
+
+                    accounts[index]->withdraw(date, amount, desc);
+
+                    //commands.txt*****************************
+                    {
+                        ofstream fout("commands.txt", ios::app);
+
+                        fout << "w " << index << " " << amount << " " << desc << endl;
+                    }
+
+                    break;
+
+                case 's'://æŸ¥è¯¢å„è´¦æˆ·ä¿¡æ¯
+
+                    for (size_t i = 0; i < accounts.size(); i++) {
+
+                        cout << "[" << i << "] ";
+
+                        accounts[i]->show();
+
+                        cout << endl;
+
+                    }
+
+                    break;
+
+                case 'c'://æ”¹å˜æ—¥æœŸ
+
+                    cin >> day;
+
+                    if (day < date.getDay())
+
+                        cout << "You cannot specify a previous day";
+
+                    else if (day > date.getMaxDay())
+
+                        cout << "Invalid day";
+
+                    else
+
+                        date = Date(date.getYear(), date.getMonth(), day);
+
+                    //commands.txt**********************
+                    {
+                        ofstream fout("commands.txt", ios::app);
+                        fout << "c " << day << endl;
+                    }
+
+                    break;
+
+                case 'n'://è¿›å…¥ä¸‹ä¸ªæœˆ
+
+                    if (date.getMonth() == 12)
+
+                        date = Date(date.getYear() + 1, 1, 1);
+
+                    else
+
+                        date = Date(date.getYear(), date.getMonth() + 1, 1);
+
+                    for (vector<Account*>::iterator iter = accounts.begin(); iter != accounts.end(); ++iter)
+
+                        (*iter)->settle(date);
+
+                    //commands.txt**********************
+                    {
+                        ofstream fout("commands.txt", ios::app);
+                        fout << "n " << endl;
+                    }
+
+                    break;
+
+                case 'q'://æŸ¥è¯¢ä¸€æ®µæ—¶é—´å†…çš„è´¦ç›®
+
+                    date1 = Date::read();
+
+                    date2 = Date::read();
+
+                    Account::query(date1, date2);
+
+
+                    //commands.txt**********************
+                    {
+                        ofstream fout("commands.txt", ios::app);
+                        fout << "q " <<
+                            date1.getYear() << " " << date1.getMonth() << " " << date1.getDay() << " " <<
+                            date2.getYear() << " " << date2.getMonth() << " " << date2.getDay() <<
+                            endl;
+                    }
+
+
+                    break;
+
+
+
+                case'e': { break; }
+                default: {
+                        cin.clear();
+                        cin.ignore(4096, '\n');
+                        cout << "Invalid command"<<endl;
+                        break;
+                    }
 
                 }
-
-                else {
-
-                    cin >> credit >> rate >> fee;
-
-                    account = new CreditAccount(date, id, credit, rate, fee);
-
-                }
-
-                accounts.push_back(account);
-
-                //commands.txt*************************
-                {
-                    //Ğ´ÈëÎÄ¼şµÄÃüÁî£ºfout
-                    ofstream fout("commands.txt", ios::app);
-                    fout << "a " << type << " " << id;
-
-                    if (type == 's')  fout << " " << rate;
-                    else fout << " " << credit << " " << rate << " " << fee;
-
-                    fout << endl;
-
-                    //´óÀ¨ºÅµÄÒâË¼£º¾Ö²¿×÷ÓÃÓò£¬×÷ÓÃÓò½áÊø£¬foutµÄÎö¹¹º¯Êı¾Í×Ô¶¯µ÷ÓÃ£¬ÎÄ¼ş±»¹Ø±Õ
-                    //Ò²¿ÉÒÔ²»¼Ó´óÀ¨ºÅ£¬Ö±½Ó½áÎ²fout.close()
-                }
-
-                break;
-
-            case 'd'://´æÈëÏÖ½ğ
-
-                cin >> index >> amount;
-
-                getline(cin, desc);
-
-                accounts[index]->deposit(date, amount, desc);
-
-
-                //commands.txt*****************************
-                {
-                    ofstream fout("commands.txt", ios::app);
-
-                    fout << "d " << index << " " << amount << " " << desc << endl;
-                }
-
-                break;
-
-
-
-            case 'w'://È¡³öÏÖ½ğ
-
-                cin >> index >> amount;
-
-                getline(cin, desc);
-
-                accounts[index]->withdraw(date, amount, desc);
-
-                //commands.txt*****************************
-                {
-                    ofstream fout("commands.txt", ios::app);
-
-                    fout << "w " << index << " " << amount << " " << desc << endl;
-                }
-
-                break;
-
-            case 's'://²éÑ¯¸÷ÕË»§ĞÅÏ¢
-
-                for (size_t i = 0; i < accounts.size(); i++) {
-
-                    cout << "[" << i << "] ";
-
-                    accounts[i]->show();
-
-                    cout << endl;
-
-                }
-
-                break;
-
-            case 'c'://¸Ä±äÈÕÆÚ
-
-                cin >> day;
-
-                if (day < date.getDay())
-
-                    cout << "You cannot specify a previous day";
-
-                else if (day > date.getMaxDay())
-
-                    cout << "Invalid day";
-
-                else
-
-                    date = Date(date.getYear(), date.getMonth(), day);
-
-                //commands.txt**********************
-                {
-                    ofstream fout("commands.txt", ios::app);
-                    fout << "c " << day << endl;
-                }
-
-                break;
-
-            case 'n'://½øÈëÏÂ¸öÔÂ
-
-                if (date.getMonth() == 12)
-
-                    date = Date(date.getYear() + 1, 1, 1);
-
-                else
-
-                    date = Date(date.getYear(), date.getMonth() + 1, 1);
-
-                for (vector<Account*>::iterator iter = accounts.begin(); iter != accounts.end(); ++iter)
-
-                    (*iter)->settle(date);
-
-                //commands.txt**********************
-                {
-                    ofstream fout("commands.txt", ios::app);
-                    fout << "n " << endl;
-                }
-
-                break;
-
-            case 'q'://²éÑ¯Ò»¶ÎÊ±¼äÄÚµÄÕËÄ¿
-
-                date1 = Date::read();
-
-                date2 = Date::read();
-
-                Account::query(date1, date2);
-
-
-                //commands.txt**********************
-                {
-                    ofstream fout("commands.txt", ios::app);
-                    fout << "q " <<
-                        date1.getYear() << " " << date1.getMonth() << " " << date1.getDay() << " " <<
-                        date2.getYear() << " " << date2.getMonth() << " " << date2.getDay() <<
-                        endl;
-                }
-
-
-                break;
-
-            }
+    
 
         } while (cmd != 'e');
 

@@ -6,28 +6,28 @@
 #define BANK_ACCUMULATOR_H
 #include"date.h"
 
-class Accumulator {
+class Accumulator{
 private:
     Date lastDate;
     double value;
     double sum;
 public:
-    Accumulator(Date date, double value) : lastDate(date), value(value), sum(0) {};
+    Accumulator( Date date,double value): lastDate(date),value(value),sum(0){};
 
-    double getSum(Date date, double value) {
-        return sum + value * (date - lastDate);
+    double getSum(Date date,double value){
+        return sum+value*(date-lastDate);
     }
 
-    void change(Date date, double value) {
-        sum = getSum(date, value);
-        lastDate = date;
-        this->value = value;
+    void change(Date date,double value){
+        sum= getSum(date,value);
+        lastDate=date;
+        this->value=value;
     }
 
-    void reset(Date date, double value) {
-        lastDate = date;
-        this->value = value;
-        sum = 0;
+    void reset(Date date,double value){
+        lastDate=date;
+        this->value=value;
+        sum=0;
     }
 
 };

@@ -16,24 +16,24 @@ using namespace std;
 class Account;
 
 
-class AccountRecord {
+class AccountRecord{
 private:
     Date date;
-    const Account* account;//ÕË»§ÃÇ
-    double amount;//½ğ¶î
-    double balance;//Óà¶î
+    const Account *account;//è´¦æˆ·ä»¬
+    double amount;//é‡‘é¢
+    double balance;//ä½™é¢
     string desc;
 
 public:
-    AccountRecord(const Date& date, const Account* account, double amount, double balance, const string& desc);
+    AccountRecord(const Date&date,const Account *account,double amount,double balance,const string &desc);
     void show()const;
 };
 
 //*********************************
-typedef multimap<Date, AccountRecord>RecordMap;
+typedef multimap<Date,AccountRecord>RecordMap;
 //*********************************
 
-class Account {
+class Account{
 private:
     string id;
     double balance;
@@ -41,9 +41,9 @@ private:
 
     static RecordMap recordMap;
 protected:
-    Account(const Date& date, const string& id);
-    void error(const std::string& msg) const;
-    void record(const Date& date, double amount, const string& desc);
+    Account(const Date &date,const string &id);
+    void error(const std::string &msg) const;
+    void record(const Date&date,double amount,const string &desc);
 
 
 public:
@@ -53,81 +53,81 @@ public:
 
     virtual void show() const;
 
-    virtual void deposit(const Date& date, double amount, const string& desc) = 0;
-    virtual void withdraw(const Date& date, double amount, const string& desc) = 0;
-    virtual void settle(const Date& date) = 0;
+    virtual void deposit(const Date&date,double amount,const string&desc)=0;
+    virtual void withdraw(const Date&date,double amount,const string&desc)=0;
+    virtual void settle(const Date&date)=0;
 
-    static void query(const Date& begin, const Date& end);
+    static void query(const Date&begin,const Date&end);
 };
 
-class SavingsAccount :public Account {
+class SavingsAccount:public Account{
 private:
     double rate;
     Accumulator acc;
 public:
-    SavingsAccount(const Date& date, const string& id, double rate);
+    SavingsAccount(const Date&date,const string &id,double rate);
 
-    void deposit(const Date& date, double amount, const string& desc);
-    void withdraw(const Date& date, double amount, const string& desc);
+    void deposit(const Date&date,double amount,const string& desc);
+    void withdraw(const Date&date,double amount,const string& desc);
 
-    void settle(const Date& date);
-    double getRate() { return rate; }
+    void settle(const Date&date);
+    double getRate(){return rate;}
 };
 
-class CreditAccount :public Account {
+class CreditAccount:public Account{
 private:
     Accumulator acc;
     double rate;
     double credit;
     double fee;
 
-    double getDebt()const {
-        double balance = getBalance();
-        return (balance < 0 ? balance : 0);
+    double getDebt()const{
+        double balance=getBalance();
+        return (balance<0?balance:0);
     }
 public:
-    CreditAccount(const Date& date, const string& id, double credit, double rate, double fee);
+    CreditAccount(const Date&date,const string &id,double credit,double rate,double fee);
 
-    void  deposit(const Date& date, double amount, const string& desc);
-    void withdraw(const Date& date, double amount, const string& desc);
+    void  deposit(const Date&date,double amount,const string& desc);
+    void withdraw(const Date&date,double amount,const string& desc);
 
-    double getAvailableCredit()const {
-        if (getBalance() < 0) { return credit + getBalance(); }
+    double getAvailableCredit()const{
+        if (getBalance()<0){return credit+getBalance();}
         else return credit;
     }
 
-    void settle(const Date& date);
-    double getRate() { return rate; }
-    double getFee() { return fee; }
-    double getCredit() { return credit; }
+    void settle(const Date&date);
+    double getRate(){return rate;}
+    double getFee(){return fee;}
+    double getCredit(){return credit;}
     void show()const;
 };
 
-class AccountExcpetion :public runtime_error {
+class AccountExcpetion:public runtime_error{
 private:
     const Account* account;
 public:
-    AccountExcpetion(const Account* acc, const string& desc) : runtime_error(desc), account(acc) {}
+    AccountExcpetion(const Account*acc,const string & desc): runtime_error(desc),account(acc){}
 
-    const Account* getAccount()const { return account; }
+    const Account*getAccount()const{return account;}
 };
 
 //typedef:
-//¸øÒÑÓĞÀàĞÍÈ¡Ò»¸öĞÂÃû×ÖµÄ¹Ø¼ü×Ö
-//typedef ÒÑÓĞÀàĞÍ ĞÂÃû×Ö
+//ç»™å·²æœ‰ç±»å‹å–ä¸€ä¸ªæ–°åå­—çš„å…³é”®å­—
+//typedef å·²æœ‰ç±»å‹ æ–°åå­—
 
 
 
 
 //typedef std::multimap<Date, AccountRecord> RecordMap;
-//ÕâÀïËü×öÁËÊ²Ã´£¿
+//è¿™é‡Œå®ƒåšäº†ä»€ä¹ˆï¼Ÿ
 //
-//std::multimap<Date, AccountRecord> ÊÇÒ»¸ö STLÈİÆ÷ÀàĞÍ£¬±íÊ¾Ò»¸ö¶àÖØÓ³Éä£¨multimap£©£¬
+//std::multimap<Date, AccountRecord> æ˜¯ä¸€ä¸ª STLå®¹å™¨ç±»å‹ï¼Œè¡¨ç¤ºä¸€ä¸ªå¤šé‡æ˜ å°„ï¼ˆmultimapï¼‰ï¼Œ
 //
-//ÆäÖĞµÄ¼ü£¨key£©ÊÇ Date ÀàĞÍ£¨ÈÕÆÚ£©£¬
+//å…¶ä¸­çš„é”®ï¼ˆkeyï¼‰æ˜¯ Date ç±»å‹ï¼ˆæ—¥æœŸï¼‰ï¼Œ
 //
-//Öµ£¨value£©ÊÇ AccountRecord ÀàĞÍ£¨ÕËÄ¿¼ÇÂ¼£©¡£
+//å€¼ï¼ˆvalueï¼‰æ˜¯ AccountRecord ç±»å‹ï¼ˆè´¦ç›®è®°å½•ï¼‰ã€‚
 //
-//Õâ¸öÈİÆ÷ÄÜ´æ´¢¶à¸öÏàÍ¬ÈÕÆÚ¶ÔÓ¦µÄ²»Í¬ÕËÄ¿£¨ÒòÎªÊÇmultimap£¬²»ÊÇmap£¬ÔÊĞí¼üÖØ¸´£©¡£
+//è¿™ä¸ªå®¹å™¨èƒ½å­˜å‚¨å¤šä¸ªç›¸åŒæ—¥æœŸå¯¹åº”çš„ä¸åŒè´¦ç›®ï¼ˆå› ä¸ºæ˜¯multimapï¼Œä¸æ˜¯mapï¼Œå…è®¸é”®é‡å¤ï¼‰ã€‚
 
 #endif //BANK_ACCOUNT_H

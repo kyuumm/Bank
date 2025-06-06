@@ -5,53 +5,53 @@
 #ifndef BANK_DATE_H
 #define BANK_DATE_H
 
-class Date {
+class Date{
 private:
     int year;
-    int month;
+    int month ;
     int day;
 
     int totalDays;
 public:
-    Date(int year = 1, int month = 1, int day = 1);
+    Date(int year=1,int month=1 ,int day=1);
 
-    int getYear()const { return year; }
-    int getMonth()const { return month; }
-    int getDay()const { return day; }
+    int getYear()const{return year;}
+    int getMonth()const{return month;}
+    int getDay()const{return day;}
     int getMaxDay()const;
 
-    bool isLeapYear()const {
-        return year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
+    bool isLeapYear()const{
+        return year%4==0 && year%100!=0 ||year%400==0;
     }
 
     void show()const;
 
-    //    int distance(const Date&date)const{
-    //        return totalDays-date.totalDays;
-    //    }
+//    int distance(const Date&date)const{
+//        return totalDays-date.totalDays;
+//    }
 
-    // operator:
-    // ÔËËã·ûÖØÔØ£¨operator overloading£©£¬
-    // ÊÇ C++ µÄÒ»¸ö·Ç³£ÖØÒªµÄÌØĞÔ£¬
-    // ÓÃÀ´ÈÃÄã×Ô¼º¶¨ÒåµÄÀàÏñÄÚÖÃÀàĞÍÒ»ÑùÊ¹ÓÃ³£¼ûÔËËã·û
-    // £¨±ÈÈç -¡¢<¡¢==¡¢+ µÈµÈ£©¡£
+// operator:
+// è¿ç®—ç¬¦é‡è½½ï¼ˆoperator overloadingï¼‰ï¼Œ
+// æ˜¯ C++ çš„ä¸€ä¸ªéå¸¸é‡è¦çš„ç‰¹æ€§ï¼Œ
+// ç”¨æ¥è®©ä½ è‡ªå·±å®šä¹‰çš„ç±»åƒå†…ç½®ç±»å‹ä¸€æ ·ä½¿ç”¨å¸¸è§è¿ç®—ç¬¦
+// ï¼ˆæ¯”å¦‚ -ã€<ã€==ã€+ ç­‰ç­‰ï¼‰ã€‚
 
 
-        //ÈÕÆÚÏà²î¶àÉÙÌì
-    int operator - (const Date& date)const {
-        return totalDays - date.totalDays;
+    //æ—¥æœŸç›¸å·®å¤šå°‘å¤©
+    int operator - (const Date&date)const{
+        return totalDays-date.totalDays;
     }
-    //ÈÕÆÚÏÈºóË³Ğò
-    bool operator < (const Date& date)const {
+    //æ—¥æœŸå…ˆåé¡ºåº
+    bool operator < (const Date&date)const{
         return totalDays < date.totalDays;
     }
-    bool operator <= (const Date& date)const {
+    bool operator <= (const Date&date)const{
         return totalDays < date.totalDays;
     }
 
-    //static: Õâ¸öº¯Êı²»ĞèÒªÈÎºÎ¶ÔÏó¾Í¿ÉÒÔµ÷ÓÃ
-    //·µ»ØÖµÊÇDate£º µ÷ÓÃÕâ¸öº¯Êı»áµÃµ½Ò»¸öĞÂµÄDate¶ÔÏó
-    //Ê¹ÓÃ·½·¨£º  Date d = Date::read();   ²»ÊÇd.read²»Òª¸ã»ìÁË£¡
+    //static: è¿™ä¸ªå‡½æ•°ä¸éœ€è¦ä»»ä½•å¯¹è±¡å°±å¯ä»¥è°ƒç”¨
+    //è¿”å›å€¼æ˜¯Dateï¼š è°ƒç”¨è¿™ä¸ªå‡½æ•°ä¼šå¾—åˆ°ä¸€ä¸ªæ–°çš„Dateå¯¹è±¡
+    //ä½¿ç”¨æ–¹æ³•ï¼š  Date d = Date::read();   ä¸æ˜¯d.readä¸è¦ææ··äº†ï¼
     static Date read();
 
 
